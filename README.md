@@ -1,4 +1,20 @@
-# 🎵 YouTube Audio Podcast Player
+# 🎵 SoundTube - مشغل البودكاست الاحترافي
+
+<div align="center">
+  <img src="public/icons/soundtube-logo.png" alt="SoundTube Logo" width="200" />
+  
+  <p>
+    <strong>مشغل بودكاست احترافي لتشغيل الصوت من YouTube</strong>
+  </p>
+  
+  <p>
+    <a href="https://mr-coder-2707.github.io/SuondTube/">🌐 عرض مباشر</a> •
+    <a href="#المميزات">✨ المميزات</a> •
+    <a href="#التثبيت">📥 التثبيت</a>
+  </p>
+</div>
+
+---
 
 تطبيق Vue 3 لتشغيل الصوت من YouTube بشكل قانوني مع دعم قوائم التشغيل والحفظ المحلي.
 
