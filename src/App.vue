@@ -720,6 +720,46 @@ export default {
       })
     }
 
+    // Background Audio & Media Session Setup
+    let wakeLock = null
+
+    async function requestWakeLock() {
+      try {
+        if ('wakeLock' in navigator && isPlaying.value) {
+          wakeLock = await navigator.wakeLock.request('screen')
+          console.log('Wake Lock activated')
+          
+          wakeLock.addEventListener('release', () => {
+            console.log('Wake Lock released')
+          })
+        }
+      } catch (err) {
+        console.log('Wake Lock error:', err)
+      }
+    }
+
+    function releaseWakeLock() {
+      if (wakeLock !== null) {
+        wakeLock.release()
+        wakeLock = null
+      }
+    }
+
+    // Update Media Session when playing state changes
+    watch(isPlaying, (playing) => {
+      if (playing) {
+        requestWakeLock()
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.playbackState = 'playing'
+        }
+      } else {
+        releaseWakeLock()
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.playbackState = 'paused'
+        }
+      }
+    })
+
     // MediaSession Setup
     onMounted(() => {
       // Initialize loading and welcome
@@ -740,7 +780,32 @@ export default {
             currentTime.value = details.seekTime
           }
         })
+        navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+          const skipTime = details.seekOffset || 10
+          rewind10()
+        })
+        navigator.mediaSession.setActionHandler('seekforward', (details) => {
+          const skipTime = details.seekOffset || 10
+          forward10()
+        })
       }
+
+      // Handle visibility change - keep audio playing in background
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && isPlaying.value) {
+          console.log('App in background - audio continues playing')
+        } else if (!document.hidden && isPlaying.value) {
+          console.log('App in foreground - audio playing')
+          requestWakeLock()
+        }
+      })
+
+      // Re-acquire wake lock when page becomes visible again
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && isPlaying.value && wakeLock === null) {
+          requestWakeLock()
+        }
+      })
 
       // Auto-load if API already ready
       if (window.YT && window.YT.Player && !player.value) {
@@ -763,6 +828,18 @@ export default {
     onUnmounted(() => {
       stopProgressTracking()
       saveCurrentPosition()
+      releaseWakeLock()
+      
+      // Clean up media session handlers
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.setActionHandler('play', null)
+        navigator.mediaSession.setActionHandler('pause', null)
+        navigator.mediaSession.setActionHandler('previoustrack', null)
+        navigator.mediaSession.setActionHandler('nexttrack', null)
+        navigator.mediaSession.setActionHandler('seekto', null)
+        navigator.mediaSession.setActionHandler('seekbackward', null)
+        navigator.mediaSession.setActionHandler('seekforward', null)
+      }
     })
 
     // Watch playlist changes
