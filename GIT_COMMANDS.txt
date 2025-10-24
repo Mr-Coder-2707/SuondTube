@@ -1,0 +1,52 @@
+# =====================================
+# أوامر Git للرفع على GitHub
+# =====================================
+
+# 1. تهيئة Git (تشغيل مرة واحدة فقط)
+git init
+
+# 2. إضافة جميع الملفات
+git add .
+
+# 3. إنشاء أول Commit
+git commit -m "Initial commit: YouTube Audio Podcast Player"
+
+# 4. ربط المستودع البعيد (غيّر USERNAME و REPO)
+git remote add origin https://github.com/USERNAME/REPO.git
+
+# 5. رفع الملفات
+git branch -M main
+git push -u origin main
+
+# =====================================
+# أوامر Git للتحديثات المستقبلية
+# =====================================
+
+# إضافة التغييرات الجديدة
+git add .
+
+# إنشاء Commit جديد
+git commit -m "وصف التغييرات"
+
+# رفع التغييرات
+git push
+
+# =====================================
+# ملاحظات مهمة
+# =====================================
+
+# 1. يجب إنشاء مستودع على GitHub أولاً من:
+#    https://github.com/new
+
+# 2. لا تنسَ تغيير USERNAME و REPO بالقيم الفعلية
+
+# 3. إذا طُلب منك تسجيل الدخول، استخدم:
+#    - Username: اسم المستخدم في GitHub
+#    - Password: Personal Access Token (وليس كلمة المرور)
+#    - يمكن إنشاء Token من: https://github.com/settings/tokens
+
+# 4. للتحقق من حالة Git:
+git status
+
+# 5. لعرض المستودعات المرتبطة:
+git remote -v
