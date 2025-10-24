@@ -721,15 +721,15 @@ export default {
     }
 
     // Background Audio & Media Session Setup
-    let wakeLock = null
+    const wakeLock = ref(null)
 
     async function requestWakeLock() {
       try {
         if ('wakeLock' in navigator && isPlaying.value) {
-          wakeLock = await navigator.wakeLock.request('screen')
+          wakeLock.value = await navigator.wakeLock.request('screen')
           console.log('Wake Lock activated')
           
-          wakeLock.addEventListener('release', () => {
+          wakeLock.value.addEventListener('release', () => {
             console.log('Wake Lock released')
           })
         }
@@ -739,9 +739,9 @@ export default {
     }
 
     function releaseWakeLock() {
-      if (wakeLock !== null) {
-        wakeLock.release()
-        wakeLock = null
+      if (wakeLock.value !== null) {
+        wakeLock.value.release()
+        wakeLock.value = null
       }
     }
 
@@ -802,7 +802,7 @@ export default {
 
       // Re-acquire wake lock when page becomes visible again
       document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && isPlaying.value && wakeLock === null) {
+        if (!document.hidden && isPlaying.value && wakeLock.value === null) {
           requestWakeLock()
         }
       })
