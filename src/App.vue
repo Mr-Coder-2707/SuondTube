@@ -1,4 +1,58 @@
 <template>
+  <!-- Loading Screen -->
+  <div v-if="showLoading" class="loading-screen">
+    <div class="loading-content">
+      <div class="loading-icon">
+        <i class="fas fa-headphones-alt"></i>
+      </div>
+      <div class="loading-text">Podcast Player</div>
+      <div class="loading-spinner">
+        <div class="spinner-bar"></div>
+        <div class="spinner-bar"></div>
+        <div class="spinner-bar"></div>
+        <div class="spinner-bar"></div>
+        <div class="spinner-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Welcome Modal -->
+  <div v-if="showWelcome" class="welcome-overlay">
+    <div class="welcome-modal">
+      <div class="welcome-icon">
+        <i class="fas fa-headphones-alt"></i>
+      </div>
+      <h2 class="welcome-title">مرحباً بك في Podcast Player</h2>
+      <p class="welcome-message">
+        استمتع بتجربة استماع احترافية مشابهة لـ Spotify<br>
+        قم بإضافة مقاطع YouTube المفضلة لديك وابدأ الاستماع الآن
+      </p>
+      <div class="welcome-features">
+        <div class="feature-item">
+          <i class="fas fa-music"></i>
+          <span>تشغيل بودكاست احترافي</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-list"></i>
+          <span>قوائم تشغيل مخصصة</span>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-mobile-alt"></i>
+          <span>يعمل على جميع الأجهزة</span>
+        </div>
+      </div>
+      <div class="welcome-checkbox">
+        <label>
+          <input type="checkbox" v-model="dontShowAgain">
+          <span>عدم إظهار هذه الرسالة مرة أخرى</span>
+        </label>
+      </div>
+      <button @click="closeWelcome" class="btn btn-welcome">
+        <i class="fas fa-play-circle"></i> ابدأ الاستخدام
+      </button>
+    </div>
+  </div>
+
   <div class="app">
     <div class="container-fluid">
       <div class="row justify-content-center">
@@ -174,6 +228,11 @@ import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 export default {
   name: 'App',
   setup() {
+    // Loading and Welcome State
+    const showLoading = ref(true)
+    const showWelcome = ref(false)
+    const dontShowAgain = ref(false)
+
     // State
     const inputUrl = ref('')
     const playlist = ref(JSON.parse(localStorage.getItem('yt_playlist') || '[]'))
@@ -191,6 +250,27 @@ export default {
     const isDragging = ref(false)
     const hoverTime = ref(0)
     const hoverPercent = ref(0)
+
+    // Loading and Welcome Functions
+    function closeWelcome() {
+      if (dontShowAgain.value) {
+        localStorage.setItem('hideWelcome', 'true')
+      }
+      showWelcome.value = false
+    }
+
+    function initializeApp() {
+      // Simulate loading for 2 seconds
+      setTimeout(() => {
+        showLoading.value = false
+        
+        // Check if user chose not to show welcome message
+        const hideWelcome = localStorage.getItem('hideWelcome')
+        if (!hideWelcome) {
+          showWelcome.value = true
+        }
+      }, 2000)
+    }
 
     // Computed
     const progressPercent = computed(() => {
@@ -642,6 +722,9 @@ export default {
 
     // MediaSession Setup
     onMounted(() => {
+      // Initialize loading and welcome
+      initializeApp()
+
       if ('mediaSession' in navigator) {
         navigator.mediaSession.setActionHandler('play', () => {
           player.value?.playVideo()
@@ -693,6 +776,10 @@ export default {
     })
 
     return {
+      showLoading,
+      showWelcome,
+      dontShowAgain,
+      closeWelcome,
       inputUrl,
       playlist,
       currentIndex,
