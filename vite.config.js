@@ -10,4 +10,6 @@ export default defineConfig({
     sourcemap: false,
     minify: 'esbuild', // استخدام esbuild بدلاً من terser (أسرع ومدمج مع Vite)
   },
+  // نسخ ملفات PWA إلى مجلد البناء
+  publicDir: 'public',
 })
