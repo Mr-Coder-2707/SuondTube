@@ -1,17 +1,15 @@
 const CACHE_NAME = 'podcast-player-v1.0.0';
 const DYNAMIC_CACHE = 'podcast-player-dynamic-v1.0.0';
 
+// Get base path from location (works for both GitHub Pages and Netlify)
+const BASE_PATH = self.location.pathname.replace(/\/[^/]*$/, '').replace(/\/$/, '') || '';
+
 // الملفات التي سيتم تخزينها مؤقتاً
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/src/main.js',
-  '/src/App.vue',
-  '/src/style.css',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
-  '/manifest.json',
-];
+  `${BASE_PATH}/`,
+  `${BASE_PATH}/index.html`,
+  `${BASE_PATH}/manifest.json`,
+].filter(url => url); // Remove empty strings
 
 // تثبيت Service Worker
 self.addEventListener('install', (event) => {
