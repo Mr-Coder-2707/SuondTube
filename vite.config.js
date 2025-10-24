@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [vue()],
-  base: '/', // يمكنك تغييره إلى '/repo-name/' إذا كنت تستخدم GitHub Pages
+  base: '/SuondTube/', // تم تعديله لـ GitHub Pages
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
