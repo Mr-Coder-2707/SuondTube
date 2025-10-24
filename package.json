@@ -1,11 +1,13 @@
 {
-  "name": "youtube-audio-podcast",
+  "name": "soundtube",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:github": "cross-env VITE_DEPLOY_TARGET=github vite build",
+    "build:netlify": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
